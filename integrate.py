@@ -26,7 +26,7 @@ class stream:
     stream -- Holds the traced streamline.
     """
 
-    def __init__(self,xx, vvfn=BHopf, integration = 'RK6', intdir= 'forward', hMin = 2e-6, hMax = .5, lMax = 10000, tol = 1e-4, iterMax = 100000, **kwargs ):
+    def __init__(self,xx, vvfn, integration = 'RK6', intdir= 'forward', hMin = 2e-6, hMax = .5, lMax = 10000, tol = 1e-4, iterMax = 100000, **kwargs ):
         """
         Creates, and returns the traced streamline.
 
