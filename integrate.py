@@ -258,7 +258,7 @@ class stream:
         twist = np.nan if toroidal == 0 else float(poloidal)/toroidal
         return twist
 
-    def getTwist_axisymmetric( self ):
+    def getTwistAxisymmetric( self ):
         """
         Returns the winding number of a streamline object, assuming it is on a torus in the
         x, y plane.
@@ -297,7 +297,7 @@ class stream:
 
     def makePoincareXZ(self,  verbose = 0):
         """
-        returns the points
+        returns the Poincare section in the XZ plane.
         """
         #calculate two orthonormal vectors in the plane where we are looking for
         #the intersection
