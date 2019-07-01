@@ -4,4 +4,5 @@
 
 # Load sub-modules.
 from .integrate import *
+from .functions import *
 

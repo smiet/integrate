@@ -405,7 +405,7 @@ def circlePoints(normal, radius=1, slide=0, offset=np.array([0,0,0]), npoints =1
     *slide*: scalar to slide center along normal
     *offset*: translate all points by this vector (add)
     *npoints*: number of points in the iterable that is returned.
-    *rot*: adds a rotation to the points
+    *rot*: rotates the points along the circle
     """
     normal = normal/norm(normal)
     p1 = perp(normal)
@@ -419,7 +419,7 @@ def circlePoints(normal, radius=1, slide=0, offset=np.array([0,0,0]), npoints =1
         points[i]=np.array(offset+points[i])
     return points
 
-def linepoints(start, stop, npoints):
+def linePoints(start, stop, npoints):
     """
     generate a string of points in a line for giving to stream_multi
     """
@@ -439,4 +439,35 @@ def Poincareplot_pointset(pointset, xmin =0, xmax =2, ymin = -1, ymax=1):
     for points in [pointset,]:
         ax.scatter(points[:,0], points[:,1])
     return ax
+
+class zeroPoints:
+    """
+    Class object that has iterable attributes that are the points to stream from.
+
+    Call signature:
+    points= ZeroPoints(loc, spine, sign=1, dist=0.01, npoints=100)
+
+    Class attributes:
+    self.forwards:
+        the starting points of fieldlines that are to be integrated forwards
+    self.backwards:
+        the starting points of fieldlines that are to be integrated
+    """
+    def __init__(self, loc, spine, sign=1, dist=0.01, npoints=100):
+        """
+        Initialize the Zeropoint object.
+        """
+        fanpoints = circlePoints(spine, radius=dist/4, offset=loc, slide=dist,
+                                  npoints=npoints)
+        fanpoints.extend(circlePoints(spine, radius=dist/4, offset=loc, slide=dist,
+                         npoints=npoints))
+        spinepoints = [loc + dist*spine, loc-dist*spine]
+
+        if sign:
+            self.forward = spinepoints
+            self.backward = fanpoints
+        else:
+            self.forward =  fanpoints
+            self.backward = spinepoints
+
 
