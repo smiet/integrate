@@ -17,7 +17,7 @@ def Dipole(xx, m = np.array([0,0,1])):
     return vf
 
 
-def Dipole_guide(xx, m = np.array([0,0,1]), d=np.array([0,0,-.5])):
+def Dipole_guide(xx, m = np.array([0,0,1]), d=np.array([0,0,-.5]),strength = 0.5):
     """
     Returns the vector field of a dipole in arbirary direction plus a guide field in another
     arbitrary direction.
@@ -31,7 +31,7 @@ def Dipole_guide(xx, m = np.array([0,0,1]), d=np.array([0,0,-.5])):
     """
     xxn = xx/np.sqrt(np.sum(xx**2)) #xxnormalized Careful around Zero!
     vf = np.array((3*xxn * np.dot(xxn, m) - m)/np.sum(xxn)**3) # dipole vector field
-    return np.array(vf+d)
+    return np.array(vf+d*strength)
 
 def Dipole_isotropes(xx):
     """
@@ -53,7 +53,7 @@ def Dipole_nulls(strength, direction):
     Expressions explained in paper/poster.
     """
     nullpos = np.zeros(3)
-    R= strength
+    R = strength
     #translate the direction vector to shperical coordinates:
     Phi = np.arctan2(np.sqrt(direction[0]**2+direction[1]**2), -direction[2])
     Theta = np.arctan2(-1* direction[1], -1* direction[2])
