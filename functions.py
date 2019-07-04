@@ -30,8 +30,9 @@ def Dipole_guide(xx, m = np.array([0,0,1]), d=np.array([0,0,-.5]),strength = 0.5
         The constant guide field.
     """
     xxn = xx/np.sqrt(np.sum(xx**2)) #xxnormalized Careful around Zero!
-    vf = np.array((3*xxn * np.dot(xxn, m) - m)/np.sum(xxn)**3) # dipole vector field
-    return np.array(vf+d*strength)
+    vf = (3*xxn * np.dot(xxn, m) - m)/np.sqrt(np.sum(xx**2))**3 # Vector Field!
+    guidefield = (d/np.sqrt(np.sum(d**2)))*strength
+    return np.array(vf+guidefield)
 
 def Dipole_isotropes(xx):
     """

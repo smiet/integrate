@@ -453,21 +453,22 @@ class zeroPoints:
     self.backwards:
         the starting points of fieldlines that are to be integrated
     """
-    def __init__(self, loc, spine, sign=1, dist=0.01, npoints=100):
+    def __init__(self, loc, spine, sign=1, dist=0.05, npoints=100):
         """
         Initialize the Zeropoint object.
         """
         fanpoints = circlePoints(spine, radius=dist/4, offset=loc, slide=dist,
                                   npoints=npoints)
-        fanpoints.extend(circlePoints(spine, radius=dist/4, offset=loc, slide=dist,
+        fanpoints.extend(circlePoints(spine, radius=dist/4, offset=loc, slide=-dist,
                          npoints=npoints))
-        spinepoints = [loc + dist*spine, loc-dist*spine]
+        self.fanpoints = fanpoints
+        self.spinepoints = [loc + dist*spine, loc-dist*spine]
 
         if sign:
-            self.forward = spinepoints
+            self.forward = self.spinepoints
             self.backward = fanpoints
         else:
             self.forward =  fanpoints
-            self.backward = spinepoints
+            self.backward = self.spinepoints
 
 
