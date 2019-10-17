@@ -136,6 +136,32 @@ def BHopf_guide(xx, strength=0.01, direction=np.array([0,0,1]), **kwargs):
     hopfField = BHopf(xx, **kwargs)
     return hopfField + (direction*strength)
 
+def BHopf_guide_RPT(xx, R=0.01, Phi=.001, Theta=0, **kwargs):
+    """
+    Function that returns the field of the Hopf field with a guide field, where the guide field is
+    given in R(magnitude), Phi and Theta spherical coordinates.
+
+    Keyword arguments:
+
+    *xx*
+        Position where the field is to be evaluated
+
+    *R*
+        amplitude of the magnetic field strength
+
+    *Phi*
+        other angle of the direction of the guide field
+
+    *Theta*
+        Azimuthal angle of the direction of the guide field
+
+    other keyword arguments are passed directly on to the Bfield function
+    """
+    direction= np.array( (np.sin(Theta)*np.cos(Phi),
+                          np.sin(Theta)*np.sin(Phi),
+                          np.cos(Theta)))
+    hopfField = BHopf(xx, **kwargs)
+    return hopfField + (direction*strength)
 
 
 def BHopf(xx, w1=1, w2=np.sqrt(2), r0=1 ):
@@ -175,3 +201,21 @@ def BHopf(xx, w1=1, w2=np.sqrt(2), r0=1 ):
         bfield[2]= w1*(-1*r0**2 + xx[0]**2 +xx[1]**2 -xx[2]**2)
 
         return prefactor*bfield
+
+def Hopf_nulls(R, Phi, Theta):
+    """
+    returns the location of the nulls of the Hopf field with a guide field that
+    has magnitude R, and angles Phi and Theta in spherical coordinates.
+    """
+    null1 = np.zeros(3)
+    null2 = np.zeros(3)
+
+    null1[0] = ((-1 + np.cos(Phi))*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*np.cos(Theta)*(1/np.sin(Phi)))/(np.sqrt(2)*R**0.25) + np.sin(Theta)*np.tan(Phi/2.)
+    null1[1] = ((-1 + np.cos(Phi))*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*(1/np.sin(Phi))*np.sin(Theta))/(np.sqrt(2)*R**0.25) - np.cos(Theta)*np.tan(Phi/2.)
+    null1[2] = -(np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))/(np.sqrt(2)*R**0.25))
+
+    null2[0] = (((np.sqrt(2)*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*np.cos(Theta))/R**0.25 + 2*np.sin(Theta))*np.tan(Phi/2.))/2.
+    null2[1] = ((-2*np.cos(Theta) + (np.sqrt(2)*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*np.sin(Theta))/R**0.25)*np.tan(Phi/2.))/2.
+    null2[2] = np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))/(np.sqrt(2)*R**0.25)
+
+    return null1, null2
