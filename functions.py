@@ -139,7 +139,7 @@ def BHopf_guide(xx, strength=0.01, direction=np.array([0,0,1]), **kwargs):
 def BHopf_guide_RPT(xx, R=0.01, Phi=.001, Theta=0, **kwargs):
     """
     Function that returns the field of the Hopf field with a guide field, where the guide field is
-    given in R(magnitude), Phi and Theta spherical coordinates.
+    given in R(magnitude), in MINUS the Phi and Theta spherical direction.
 
     Keyword arguments:
 
@@ -157,14 +157,14 @@ def BHopf_guide_RPT(xx, R=0.01, Phi=.001, Theta=0, **kwargs):
 
     other keyword arguments are passed directly on to the Bfield function
     """
-    direction= np.array( (np.sin(Theta)*np.cos(Phi),
+    direction= np.array( (np.cos(Theta)*np.sin(Phi),
                           np.sin(Theta)*np.sin(Phi),
-                          np.cos(Theta)))
+                          np.cos(Phi)))
     hopfField = BHopf(xx, **kwargs)
-    return hopfField + (direction*strength)
+    return hopfField - (direction*R)
 
 
-def BHopf(xx, w1=1, w2=np.sqrt(2), r0=1 ):
+def BHopf(xx, w1=1, w2=1, r0=1 ):
         """
         Function that returns the magnetic field of the Hopf map at x,y,z coordinates
         given by xx.
@@ -194,18 +194,20 @@ def BHopf(xx, w1=1, w2=np.sqrt(2), r0=1 ):
 
         bfield=np.zeros(3)
         r2=(np.sum(xx**2)) #
-        prefactor = 4*r0**4/(np.pi*(r0**2 + r2)**3)
+        prefactor = r0**4/((r0**2 + r2)**3)
 
         bfield[0]=2*(w2*r0*xx[1] - w1*xx[0]*xx[2]) #remember python arrays start at zero!
         bfield[1]=-2*(w2*r0*xx[0] + w1*xx[1]*xx[2])
         bfield[2]= w1*(-1*r0**2 + xx[0]**2 +xx[1]**2 -xx[2]**2)
 
-        return prefactor*bfield
+        return -1* prefactor*bfield
 
 def Hopf_nulls(R, Phi, Theta):
     """
     returns the location of the nulls of the Hopf field with a guide field that
-    has magnitude R, and angles Phi and Theta in spherical coordinates.
+    has magnitude R, and angles Phi (azimuthal) and Theta in spherical coordinates.
+
+    DUE TO REASONS PHI=0 GIVES NANS. USE PHI=0.00000000001 TO AVOID
     """
     null1 = np.zeros(3)
     null2 = np.zeros(3)
@@ -217,5 +219,6 @@ def Hopf_nulls(R, Phi, Theta):
     null2[0] = (((np.sqrt(2)*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*np.cos(Theta))/R**0.25 + 2*np.sin(Theta))*np.tan(Phi/2.))/2.
     null2[1] = ((-2*np.cos(Theta) + (np.sqrt(2)*np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))*np.sin(Theta))/R**0.25)*np.tan(Phi/2.))/2.
     null2[2] = np.sqrt(1 - 2*np.sqrt(R) + np.cos(Phi))/(np.sqrt(2)*R**0.25)
+
 
     return null1, null2
